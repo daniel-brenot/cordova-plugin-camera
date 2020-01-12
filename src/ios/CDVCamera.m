@@ -497,6 +497,14 @@ static NSString* toBase64(NSData* data) {
                 result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:toBase64(data)];
             }
         }
+        case DestinationTypeDataArray:
+        {
+            image = [self retrieveImage:info options:options];
+            NSData* data = [self processImage:image info:info options:options];
+            if (data)  {
+                result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK data];
+            }
+        }
             break;
         default:
             break;
