@@ -70,6 +70,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private static final int DATA_URL = 0;              // Return base64 encoded string
     private static final int FILE_URI = 1;              // Return file uri (content://media/external/images/media/2 for Android)
     private static final int NATIVE_URI = 2;                    // On Android, this is the same as FILE_URI
+    private static final int DATA_ARRAY = 3;            // Return the raw image data as an Array
 
     private static final int PHOTOLIBRARY = 0;          // Choose image from picture library (same as SAVEDPHOTOALBUM for Android)
     private static final int CAMERA = 1;                // Take picture from camera
@@ -397,6 +398,26 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             title = GET_VIDEO;
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
+        } else if (destType == DATA_ARRAY) {
+            bitmap = getScaledAndRotatedBitmap(sourcePath);
+
+            if (bitmap == null) {
+                // Try to get the bitmap from intent.
+                bitmap = (Bitmap) intent.getExtras().get("data");
+            }
+
+            // Double-check the bitmap.
+            if (bitmap == null) {
+                LOG.d(LOG_TAG, "I either have a null image path or bitmap");
+                this.failPicture("Unable to create bitmap!");
+                return;
+            }
+
+            this.processPictureDataArray(bitmap, this.encodingType);
+
+            if (!this.saveToPhotoAlbum) {
+                checkForDuplicateImage(DATA_URL);
+            }
         } else if (this.mediaType == ALLMEDIA) {
             // I wanted to make the type 'image/*, video/*' but this does not work on all versions
             // of android so I had to go with the wildcard search.

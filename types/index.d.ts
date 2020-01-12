@@ -168,6 +168,7 @@ declare var Camera: {
         PHOTOLIBRARY: number;
         CAMERA: number;
         SAVEDPHOTOALBUM: number;
+        DATA_ARRAY: number;
     }
     // Used only on iOS
     PopoverArrowDirection: {
