@@ -53,6 +53,7 @@ interface CameraOptions {
      *      FILE_URI : 1,   Return image file URI
      *      NATIVE_URI : 2  Return image native URI
      *          (e.g., assets-library:// on iOS or content:// on Android)
+     *      DATA_ARRAY : 3  Return image as raw data
      */
     destinationType?: number;
     /**
