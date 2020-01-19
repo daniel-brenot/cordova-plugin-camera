@@ -398,26 +398,6 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             title = GET_VIDEO;
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-        } else if (destType == DATA_ARRAY) {
-            bitmap = getScaledAndRotatedBitmap(sourcePath);
-
-            if (bitmap == null) {
-                // Try to get the bitmap from intent.
-                bitmap = (Bitmap) intent.getExtras().get("data");
-            }
-
-            // Double-check the bitmap.
-            if (bitmap == null) {
-                LOG.d(LOG_TAG, "I either have a null image path or bitmap");
-                this.failPicture("Unable to create bitmap!");
-                return;
-            }
-
-            this.processPictureDataArray(bitmap, this.encodingType);
-
-            if (!this.saveToPhotoAlbum) {
-                checkForDuplicateImage(DATA_URL);
-            }
         } else if (this.mediaType == ALLMEDIA) {
             // I wanted to make the type 'image/*, video/*' but this does not work on all versions
             // of android so I had to go with the wildcard search.
@@ -578,6 +558,26 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                     }
 
                     this.callbackContext.success(uri.toString());
+                }
+            } else if (destType == DATA_ARRAY) {
+                bitmap = getScaledAndRotatedBitmap(sourcePath);
+    
+                if (bitmap == null) {
+                    // Try to get the bitmap from intent.
+                    bitmap = (Bitmap) intent.getExtras().get("data");
+                }
+    
+                // Double-check the bitmap.
+                if (bitmap == null) {
+                    LOG.d(LOG_TAG, "I either have a null image path or bitmap");
+                    this.failPicture("Unable to create bitmap!");
+                    return;
+                }
+    
+                this.processPictureDataArray(bitmap, this.encodingType);
+    
+                if (!this.saveToPhotoAlbum) {
+                    checkForDuplicateImage(DATA_URL);
                 }
             } else {
                 Uri uri = Uri.fromFile(createCaptureFile(this.encodingType, System.currentTimeMillis() + ""));

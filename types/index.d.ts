@@ -33,7 +33,7 @@ interface Camera {
      * @param cameraOptions Optional parameters to customize the camera settings.
      */
     getPicture(
-        cameraSuccess: (data: string) => void,
+        cameraSuccess: (data: string | ArrayBuffer) => void,
         cameraError: (message: string) => void,
         cameraOptions?: CameraOptions): void;
     // Next will work only on iOS
@@ -149,7 +149,8 @@ declare var Camera: {
     DestinationType: {
         DATA_URL: number;
         FILE_URI: number;
-        NATIVE_URI: number
+        NATIVE_URI: number;
+        DATA_ARRAY: number;
     }
     Direction: {
         BACK: number;
